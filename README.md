@@ -1,11 +1,14 @@
 # lexneticbackend
 for lexnetic backend test
 
-## After clone the repository open project with vs code and run:
-    - ctrl + shift + p
-    - select reopen with container
+## After clone the repository open project with vs code
+    - create .env file in todo-backend folder
+    - fill in the value provide by .env.local
+    - then run this command
+        - ctrl + shift + p
+        - select reopen with container
 
-## trobleshoots if container not start
+## Trobleshoots if container not start
     - check if another container occupied port 5432 or 3000
     - check postgres logs if database container cannot start in case maybe postgres is different version
 
