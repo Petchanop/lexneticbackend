@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseInterceptors, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Req, Res, UseInterceptors, UsePipes } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { createTaskDto, updateTaskDto } from './dto/tasks.dto';
 import { Task } from './entities/tasks.entity';
@@ -8,8 +8,7 @@ import { SlugIdInterceptor } from 'src/interceptors/slugid.interceptor';
 import { TaskResponseInterceptor } from 'src/interceptors/task.interceptor';
 import { UUID } from 'crypto';
 import { SlugIdPipe } from 'src/users/pipe/id.pipe';
-import { UpdateResult } from 'typeorm';
-
+import { Response } from 'express';
 @ApiTags('tasks')
 @UseInterceptors(SlugIdInterceptor)
 @Controller('tasks')
@@ -39,26 +38,33 @@ export class TasksController {
         return await this.tasksService.getAllTasks(slugid.decode(req.user.id))
     }
 
-    @Patch('/:id')
+    @Patch(':id')
     @UseInterceptors(TaskResponseInterceptor)
     @UsePipes(SlugIdPipe)
     @ApiCreatedResponse({
+        status: 204,
         description: 'update task by task id',
-        type: Promise<UpdateResult>
+        type: Response
     })
     @ApiBearerAuth('JWT')
-    async updateTask(@Param('taskId') taskId:UUID, @Body() payload: updateTaskDto): Promise<UpdateResult>{
-        return await this.tasksService.updateTask(taskId, payload)
+    async updateTask(@Param('id') taskId:UUID, @Body() payload: updateTaskDto, @Res() res:Response): Promise<Response>{
+        try {
+            await this.tasksService.updateTask(taskId, payload)
+        } catch (error) {
+            throw new HttpException('Cannot update task', HttpStatus.NOT_FOUND)
+        }
+        return res.status(HttpStatus.OK).send({status: HttpStatus.OK, message: `successful update comment id ${taskId}`})
     }
 
-    @Delete('/:id')
+    @Delete(':id')
     @UsePipes(SlugIdPipe)
     @ApiCreatedResponse({
         description: 'delete task by task id',
-        type: Promise<{ affected?: number }>
+        type: Response
     })
     @ApiBearerAuth('JWT')
-    async deleteTask(@Param('taskId') taskId:UUID): Promise<{ affected?: number }> {
-        return this.tasksService.deleteTask(taskId)
+    async deleteTask(@Param('id') taskId:UUID, @Res() res:Response): Promise<Response> {
+        await this.tasksService.deleteTask(taskId)
+        return res.status(HttpStatus.NO_CONTENT).send()
     }
 }

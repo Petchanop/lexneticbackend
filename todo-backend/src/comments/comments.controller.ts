@@ -8,7 +8,6 @@ import { Roles } from 'src/users/decorator/roles.decorator';
 import { UserRole } from 'src/users/entities/users.entity';
 import { commentDto } from './dto/comments.dto';
 import * as slugid from 'slugid';
-import { rmSync } from 'fs';
 
 @ApiTags('comments')
 @Roles(UserRole.ADMIN, UserRole.USER)
