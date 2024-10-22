@@ -17,6 +17,7 @@ import { AuthGuard } from 'src/auth/guard/auth.guard';
         provide: APP_GUARD,
         useClass: AuthGuard,
     },
-  ]
+  ],
+  exports: [TasksService]
 })
 export class TasksModule {}

@@ -7,7 +7,6 @@ import { Comment } from './entities/comments.entity'
 import { Roles } from 'src/users/decorator/roles.decorator';
 import { UserRole } from 'src/users/entities/users.entity';
 import { commentDto } from './dto/comments.dto';
-import * as slugid from 'slugid';
 
 @ApiTags('comments')
 @Roles(UserRole.ADMIN, UserRole.USER)
@@ -38,7 +37,7 @@ export class CommentsController {
     })
     @ApiBearerAuth('JWT')
     async getCommentByUser(@Req() req): Promise<Comment[]> {
-        const id = slugid.decode(req.user.id)
+        const id = req.user.id
         return this.commentService.getCommentByUser(id)
     }
 

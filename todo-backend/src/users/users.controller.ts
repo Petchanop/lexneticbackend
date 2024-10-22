@@ -4,9 +4,8 @@ import { UsersService } from './users.service';
 import { User, UserRole } from './entities/users.entity';
 import { CreateUserDto, PaginationUserDto, UpdateUserDto } from './dto/users.dto';
 import { Roles } from './decorator/roles.decorator';
-import * as slugid from 'slugid';
 import { SlugIdInterceptor } from 'src/interceptors/slugid.interceptor';
-import { IdPipe, SlugIdPipe } from './pipe/id.pipe';
+import { SlugIdPipe } from './pipe/id.pipe';
 
 @ApiTags('users')
 @Controller('users')
@@ -32,7 +31,7 @@ export class UsersController {
   @ApiBearerAuth('JWT')
   async getMe(@Req() req) {
     const user = req.user
-    const me = this.userService.getUserById(slugid.decode(user.id))
+    const me = this.userService.getUserById(user.id)
     return me
   }
 
@@ -46,7 +45,7 @@ export class UsersController {
   async userUpdate(@Req() req, @Body() updateUserDto: UpdateUserDto) {
     const user = req.user
     console.log(user)
-    const res = await this.userService.update(slugid.decode(user.id), updateUserDto);
+    const res = await this.userService.update(user.id, updateUserDto);
     return res;
   }
 

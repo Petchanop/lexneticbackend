@@ -3,7 +3,6 @@ import { TasksService } from './tasks.service';
 import { createTaskDto, updateTaskDto } from './dto/tasks.dto';
 import { Task } from './entities/tasks.entity';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
-import * as slugid from 'slugid';
 import { SlugIdInterceptor } from 'src/interceptors/slugid.interceptor';
 import { TaskResponseInterceptor } from 'src/interceptors/task.interceptor';
 import { UUID } from 'crypto';
@@ -24,7 +23,7 @@ export class TasksController {
     })
     @ApiBearerAuth('JWT')
     async createTask(@Req() req, @Body() payload: createTaskDto): Promise<Task>{
-        return await this.tasksService.createTask(slugid.decode(req.user.id), payload);
+        return await this.tasksService.createTask(req.user.id, payload);
     }
 
     @Get('/me')
@@ -35,7 +34,7 @@ export class TasksController {
     })
     @ApiBearerAuth('JWT')
     async getAllTasks(@Req() req): Promise<Task[]>{
-        return await this.tasksService.getAllTasks(slugid.decode(req.user.id))
+        return await this.tasksService.getAllTasks(req.user.id)
     }
 
     @Patch(':id')
