@@ -30,4 +30,11 @@ open vscode terminal use cd command to go inside todo-backend directory
 ## Start in production mode
     npm run start
 
+## Run All unit test
+    npm run test
+
+## Run specific test
+    npm run {module folder name}
+
 For test api using url localhost:3000/api which create by Swagger ui
+** Now only have just user unit test to show
