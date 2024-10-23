@@ -23,16 +23,19 @@ services:
 
   lexnetictododb:
     container_name: lexnetictododb
-    image: postgres:16
+    build:
+      context: .
+      dockerfile: postgres.Dockerfile
     restart: always
     env_file:
       - ../todo-backend/.env
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
     
+    volumes:
+      - postgres-lexnetic:/var/lib/postgresql/data
+
     networks:
       - todobackend
-    
+
     ports:
       - 5432:5432
 
@@ -41,7 +44,7 @@ services:
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
 volumes:
-  postgres-data:
+  postgres-lexnetic:
 
 networks:
   todobackend:

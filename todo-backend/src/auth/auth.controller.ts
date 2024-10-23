@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/users/dto/users.dto';
 import { SigninDto } from './dto/auth.dto';
 import { Public } from './decorator/auth.decorator';
@@ -12,6 +12,10 @@ export class AuthController {
 
     @Public()
     @Post('/register')
+    @ApiOperation({ 
+        description: "required username email and password.", 
+        summary: 'use for register new user.'
+    })
     @ApiCreatedResponse({
         description: 'register user',
     })
@@ -22,6 +26,10 @@ export class AuthController {
 
     @Public()
     @Post('/signin')
+    @ApiOperation({ 
+        description: "use only username or email with password.", 
+        summary: 'use for sign in.' 
+    })
     @ApiCreatedResponse({
         description: 'user sign in',
     })

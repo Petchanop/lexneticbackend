@@ -9,6 +9,7 @@ import {
   } from 'typeorm';
   import { Exclude } from 'class-transformer';
 import { Task } from 'src/tasks/entities/tasks.entity';
+import { UUID } from 'crypto';
   
   export enum UserRole {
     ADMIN = 'admin',
@@ -21,7 +22,7 @@ import { Task } from 'src/tasks/entities/tasks.entity';
      * this decorator will help to auto generate id for the table.
      */
     @PrimaryGeneratedColumn('uuid')
-    id: string;
+    id: UUID;
   
     @Column({ type: 'varchar', length: 50, nullable: false  })
     username: string;

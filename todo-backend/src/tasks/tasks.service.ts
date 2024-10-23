@@ -14,7 +14,7 @@ export class TasksService {
         private dataSource: DataSource,
     ) { }
 
-    async createTask(userId: string, payload: createTaskDto): Promise<Task> {
+    async createTask(userId: UUID, payload: createTaskDto): Promise<Task> {
         console.log(userId, payload)
         const get_task = await this.taskRepository.find({
             relations: {
@@ -41,7 +41,7 @@ export class TasksService {
         return task
     }
 
-    async getAllTasks(userId: string): Promise<Task[]> {
+    async getAllTasks(userId: UUID): Promise<Task[]> {
         return await this.taskRepository.find({
             relations: {
                 user: true

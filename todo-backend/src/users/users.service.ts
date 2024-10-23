@@ -4,6 +4,7 @@ import { User } from './entities/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { UUID } from 'crypto';
 
 @Injectable()
 export class UsersService {
@@ -23,20 +24,17 @@ export class UsersService {
 
     async checkUserAlreadyExists(createUserDto: CreateUserDto): Promise<boolean> {
         var user: User;
-        try {
-            if (createUserDto.username) {
-                user = await this.getUserByUserName(createUserDto.username);
-            }
-            if (!user && createUserDto.email) {
-                user = await this.getUserByEmail(createUserDto.email);
-            }
-        } catch (error) {
-            ;
+        var userByEmail: User;
+        if (createUserDto.username) {
+            user = await this.userRepository.findOne({ where : { username: createUserDto.username }});
         }
-        if (user === undefined) {
-            return false;
+        if (createUserDto.email) {
+            userByEmail = await this.userRepository.findOne({ where: { email: createUserDto.email } });
         }
-        return true;
+        if (user || userByEmail) {
+            return true;
+        }
+        return false;
     }
 
     async hashPassword(password: string): Promise<string> {
@@ -74,7 +72,7 @@ export class UsersService {
         return user;
     }
 
-    async getUserById(id: string): Promise<User> | null {
+    async getUserById(id: UUID): Promise<User> | null {
         const user = await this.userRepository.findOne({ where: { id } });
         if (!user)
             throw new HttpException('User not Found', HttpStatus.NOT_FOUND);
@@ -89,7 +87,7 @@ export class UsersService {
     }
 
     async update(
-        id: string,
+        id: UUID,
         updateUserDto: UpdateUserDto,
     ): Promise<User> {
         console.log("update", updateUserDto)
@@ -106,7 +104,7 @@ export class UsersService {
         return this.userRepository.save(updated);
     }
 
-    async remove(id: string): Promise<{ affected?: number }> {
+    async remove(id: UUID): Promise<{ affected?: number }> {
         return this.userRepository.delete(id);
     }
 
