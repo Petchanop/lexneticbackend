@@ -16,8 +16,7 @@ export const mockUserRepository = {
 };
 
 export const dataSourceMockFactory = {
-  getRepository: jest.fn(),
-  save: jest.fn(),
+  getRepository: jest.fn().mockReturnValue(mockUserRepository),
 }
 
 describe('UsersService', () => {
@@ -34,7 +33,7 @@ describe('UsersService', () => {
           useValue: mockUserRepository,
         },
         {
-          provide: DataSource, 
+          provide: DataSource,
           useValue: dataSourceMockFactory,
         },
       ],
@@ -60,7 +59,7 @@ describe('UsersService', () => {
       password: 'abcdGG124%%',
     } as User;
 
-    jest.spyOn(mockUserRepository, 'save').mockReturnValue(user);
+    jest.spyOn(dataSourceMockFactory, 'getRepository').getMockImplementation()
 
     // act
     const result = await service.create(createUserDto);

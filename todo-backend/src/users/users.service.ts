@@ -51,8 +51,7 @@ export class UsersService {
             password: await this.hashPassword(createUserDto.password),
             role: createUserDto.role,
         });
-        // this.dataSource.getRepository(User).save(user);
-        this.userRepository.save(user);
+        this.dataSource.getRepository(User).save(user);
         return user;
     }
 
